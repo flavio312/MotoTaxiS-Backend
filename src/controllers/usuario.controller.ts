@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import pool from "../config/db.config";
 
-
 export const getUsers = async (req: Request, res: Response): Promise<any> => {
     try{
         const [rows] = await pool.query('SELECT * FROM Usuarios');

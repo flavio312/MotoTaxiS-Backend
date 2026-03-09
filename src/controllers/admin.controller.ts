@@ -3,9 +3,7 @@ import pool from '../config/db.config';
 import {AuthRequest} from '../middlewares/auth.middleware';
 
 export const getAllUsers = async (req: Request, res: Response) => {
-
     try {
-
         const [rows] = await pool.query(
             `SELECT 
                 u.idUsuario,

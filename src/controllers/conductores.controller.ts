@@ -3,9 +3,9 @@ import pool from "../config/db.config";
 import { AuthRequest } from "../middlewares/auth.middleware";
 
 export const createConductor = async (req: AuthRequest, res: Response): Promise<any> => {
-
    
-    const idUsuario = req.user.idUsuario;
+    const idUsuario = req.user?.idUsuario;
+    const rol = req.user?.rol;
 
     const {
         licencia,
@@ -91,7 +91,7 @@ export const createConductor = async (req: AuthRequest, res: Response): Promise<
 
 export const getConductor = async (req: AuthRequest, res: Response) => {
 
-    const idUsuario = req.user.idUsuario;
+    const idUsuario = req.user?.idUsuario;
 
     const [rows]: any = await pool.query(
         `SELECT *
@@ -105,7 +105,8 @@ export const getConductor = async (req: AuthRequest, res: Response) => {
 
 export const updateConductor = async (req: AuthRequest, res: Response) => {
 
-    const idUsuario = req.user.idUsuario;
+    const idUsuario = req.user?.idUsuario;
+    const rol = req.user?.rol;
 
     const {
         licencia,

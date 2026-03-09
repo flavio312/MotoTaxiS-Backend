@@ -1,0 +1,38 @@
+// --usuario--
+{
+  "nombreUsuario": "carlos",
+  "password": "Conductor2026",
+  "rol": "conductor",
+  "estadoCuenta": "activo",
+  "fotoPerfil": "https://miapp.com/uploads/conductor.jpg"
+}
+// --persona--
+{
+  "nombre": "Flavio",
+  "apellidoP": "Diaz",
+  "apellidoM": "Lopez",
+  "idSexo": 1,
+  "correoElectronico": "fd@gmail.com",
+  "telefono": "1234567890",
+  "fechaNacimiento": "1997-12-23"
+}
+--conductor--
+{
+  "licencia": "ABC123456",
+  "licenciaFechaExpedicion": "2023-01-10",
+  "licenciaFechaVencimiento": "2027-01-10",
+
+  "estatus": "habilitado",
+  "descripcion": "Alta inicial del conductor",
+
+  "jornada": {
+    "fecha": "2026-03-07",
+    "horaInicio": "08:00",
+    "horaFin": "18:00"
+  }
+}
+--login--
+{
+  "nombreUsuario": "carlos_driver",
+  "password": "Conductor2026"
+}

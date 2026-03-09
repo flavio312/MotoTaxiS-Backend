@@ -3,7 +3,8 @@ import pool from "../config/db.config";
 import { AuthRequest } from "../middlewares/auth.middleware";
 
 export const crearPersona = async (req: AuthRequest, res: Response): Promise<any> => {
-    const idUsuario = req.user.idUsuario;
+    const idUsuario = req.user?.idUsuario;
+    const rol = req.user?.rol;
 
     const {
         nombre,
@@ -56,7 +57,8 @@ export const crearPersona = async (req: AuthRequest, res: Response): Promise<any
 
 export const getMyPersona = async (req: AuthRequest, res: Response): Promise<any> => {
 
-    const idUsuario = req.user.idUsuario;
+    const idUsuario = req.user?.idUsuario;
+    const rol = req.user?.rol;
 
     try {
 

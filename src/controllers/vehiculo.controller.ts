@@ -4,7 +4,7 @@ import { AuthRequest } from "../middlewares/auth.middleware";
 
 export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<any> => {
 
-    const idPropietario = req.user.idUsuario;
+    const idPropietario = req.user?.idUsuario;
 
     const {
         inmatriculacion,
@@ -84,7 +84,7 @@ export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<an
 
 export const getMyVehiculos = async (req: AuthRequest, res: Response) => {
 
-    const idPropietario = req.user.idUsuario;
+    const idPropietario = req.user?.idUsuario;
 
     try {
 
