@@ -9,6 +9,7 @@ import conductorRoutes from "./src/routes/conductores.routes";
 import vehiculoRoutes from "./src/routes/vehiculos.routes";
 import adminRoutes from "./src/routes/admin.routes";
 import propietarioRoutes from "./src/routes/propietario.routes";
+import domicilioRoutes from "./src/routes/domicilio.routes";
 
 dotenv.config();
 
@@ -18,9 +19,9 @@ const PORT = process.env.PORT || '';
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/usuarios', usuarioRoutes,conductorRoutes, personaRoutes, propietarioRoutes);
+app.use('/api/usuarios', usuarioRoutes,conductorRoutes, personaRoutes, propietarioRoutes,vehiculoRoutes);
 app.use('/api/auth', loginRoutes);
-app.use('/api/servicio', vehiculoRoutes);
+app.use('/api/servicio', domicilioRoutes);
 app.use('/api/admin', adminRoutes);
 
 (async () => {

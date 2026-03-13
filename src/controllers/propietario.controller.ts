@@ -52,6 +52,14 @@ export const createPropietario = async (req: AuthRequest, res: Response): Promis
         if (usuario[0].rol !== 'propietario') {
             return res.status(403).json({ message: "El usuario no tiene rol propietario" });
         }
+         // Verificar si ya existe autorización
+        const [autorizacion]: any = await connection.query(
+            `SELECT idAutorizacion, estado FROM Autorizacion WHERE idUsuario = ? ORDER BY fechaSolicitud DESC LIMIT 1`,
+            [idPropietario]
+        );
+        if (autorizacion.length > 0 && autorizacion[0].estado === 'pendiente') {
+            return res.status(400).json({ message: "Ya existe una solicitud pendiente" });
+        }
 
         const [exists]: any = await connection.query(
             `SELECT idPropietario FROM Propietarios WHERE idPropietario = ?`,
@@ -67,10 +75,16 @@ export const createPropietario = async (req: AuthRequest, res: Response): Promis
              VALUES (?, ?, ?)`,
             [idPropietario, rfc, razonSocial]
         );
+        // Crear solicitud de autorización
+        await connection.query(
+            `INSERT INTO Autorizacion (idUsuario, estado, fechaSolicitud)
+             VALUES (?, 'pendiente', NOW())`,
+            [idPropietario]
+        );
 
         await connection.commit();
 
-        res.status(201).json({ message: "Propietario creado exitosamente" });
+        res.status(201).json({ message: "Solicitud de propietario creada, pendiente de autorización"});
 
     } catch (error) {
         if (connection) await connection.rollback();

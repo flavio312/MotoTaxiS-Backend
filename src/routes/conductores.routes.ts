@@ -14,7 +14,7 @@ router.post(
 router.get(
     "/conductor",
     authenticateToken,
-    authorizeRole(['administrador', 'conductor']),
+    authorizeRole(['admin', 'conductor']),
     getConductor
 );
 router.put(

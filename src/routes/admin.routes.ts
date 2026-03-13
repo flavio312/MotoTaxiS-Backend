@@ -3,7 +3,11 @@ import {
     getAllUsers,
     getAllConductores,
     getAllPropietarios,
-    getConductorEstatus
+    getConductorEstatus,
+    getVehiculoEstatus,
+    getAutorizacionesPropietarios,
+    aprobarPropietario,
+    rechazarPropietario
 } from "../controllers/admin.controller";
 
 import { authenticateToken, authorizeRole } from "../middlewares/auth.middleware";
@@ -38,4 +42,29 @@ router.get(
     getConductorEstatus
 );
 
+router.get(
+    "/vehiculos",
+    authenticateToken,
+    authorizeRole(['admin']),
+    getVehiculoEstatus
+
+);
+router.get(
+    "/autorizaciones/propietarios",
+    authenticateToken,
+    authorizeRole(['admin']),
+    getAutorizacionesPropietarios
+);
+router.put(
+    "/autorizaciones/propietarios/:idAutorizacion/aprobar",
+    authenticateToken,
+    authorizeRole(['admin']),
+    aprobarPropietario
+);
+router.put(
+    "/autorizaciones/propietarios/:idAutorizacion/rechazar",
+    authenticateToken,
+    authorizeRole(['admin']),
+    rechazarPropietario
+);
 export default router;

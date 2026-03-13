@@ -9,6 +9,7 @@ export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<an
     const {
         inmatriculacion,
         idModelo,
+        color,
         fechaAdquisicion,
         estatus,
         descripcion
@@ -23,19 +24,19 @@ export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<an
 
         // 1️⃣ Crear vehículo
         const [result]: any = await connection.query(
-            `INSERT INTO Vehiculos
-            (inmatriculacion, idModelo, fechaAdquisicion)
-            VALUES (?, ?, ?)`,
+            `INSERT INTO Vehiculo
+            (inmatriculacion, idModelo,color, fechaAdquisicion)
+            VALUES (?, ?, ?, ?)`,
             [
                 inmatriculacion,
                 idModelo,
+                color,
                 fechaAdquisicion
             ]
         );
 
         const idVehiculo = result.insertId;
 
-        // 2️⃣ Registrar relación propietario - vehículo
         await connection.query(
             `INSERT INTO PropietarioVehiculo
             (idPropietario, idVehiculo, fechaInicio)
@@ -46,7 +47,6 @@ export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<an
             ]
         );
 
-        // 3️⃣ Registrar estatus inicial
         await connection.query(
             `INSERT INTO VehiculoEstatus
             (idVehiculo, estatus, fechaInicio, descripcion)
