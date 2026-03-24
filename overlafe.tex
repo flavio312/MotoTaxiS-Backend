@@ -1,0 +1,127 @@
+\chapter{Metodología y desarrollo del proyecto}
+
+\section{Levantamiento de requerimientos}
+
+El levantamiento de requerimientos se llevó a cabo mediante un enfoque metodológico 
+orientado a comprender las necesidades reales del servicio de mototaxi, 
+considerando el contexto operativo, los actores involucrados y las limitaciones existentes.
+
+Para la recopilación de información, se emplearon diversas técnicas, entre las que destacan:
+
+\begin{itemize}
+    \item \textbf{Entrevistas informales}: Se realizaron entrevistas con usuarios potenciales del 
+    sistema, incluyendo pasajeros y conductores, con el objetivo de identificar problemáticas 
+    actuales en la prestación del servicio.
+    \item \textbf{Observación directa}: Se analizaron las dinámicas del servicio de mototaxi 
+    en entornos reales, identificando procesos informales de asignación de servicios, 
+    comunicación y operación.
+    \item \textbf{Revisión documental}: Se estudiaron aplicaciones similares de transporte (como plataformas digitales de movilidad) para identificar buenas prácticas y funcionalidades clave.
+\end{itemize}
+
+A partir de estas técnicas, se identificaron hallazgos relevantes, tales como la falta de control en la asignación de servicios, la ausencia de historial de viajes, la inexistencia de mecanismos de evaluación y la necesidad de mejorar la seguridad de los usuarios.
+
+Estos hallazgos fueron analizados y validados mediante discusión entre los integrantes del equipo, permitiendo transformar las necesidades detectadas en requerimientos concretos. Este proceso permitió definir las funcionalidades principales del sistema, así como las reglas de negocio que guiarán su desarrollo.
+
+En consecuencia, el levantamiento de requerimientos no solo permitió identificar necesidades, sino también comprender el contexto organizacional y operativo del servicio de mototaxi, proporcionando una base sólida para las etapas posteriores del proyecto.
+
+---
+
+\section{Análisis de requerimientos}
+
+En esta fase se realizó un análisis estructurado de los requerimientos obtenidos, clasificándolos en requerimientos funcionales y no funcionales, con el objetivo de definir de manera clara el comportamiento esperado del sistema.
+
+\subsection*{Requerimientos funcionales}
+
+Los requerimientos funcionales describen las acciones que el sistema debe ser capaz de realizar:
+
+\begin{itemize}
+    \item Registro y autenticación de usuarios.
+    \item Gestión de roles (pasajero, conductor, propietario).
+    \item Solicitud y asignación de servicios de mototaxi.
+    \item Registro de jornadas de trabajo de conductores.
+    \item Gestión de vehículos y su asignación a propietarios.
+    \item Evaluación bidireccional entre usuarios.
+    \item Bloqueo de interacción entre usuarios en caso de experiencias negativas.
+    \item Consulta de historial de servicios.
+\end{itemize}
+
+\subsection*{Requerimientos no funcionales}
+
+Los requerimientos no funcionales definen las características de calidad del sistema:
+
+\begin{itemize}
+    \item \textbf{Usabilidad}: La aplicación debe ser intuitiva y fácil de usar.
+    \item \textbf{Seguridad}: Protección de datos mediante autenticación y manejo seguro de contraseñas.
+    \item \textbf{Escalabilidad}: El sistema debe permitir la incorporación de nuevas funcionalidades.
+    \item \textbf{Disponibilidad}: El sistema debe estar disponible para los usuarios en todo momento.
+    \item \textbf{Rendimiento}: Respuesta rápida en la consulta y registro de información.
+\end{itemize}
+
+\subsection*{Modelado de requerimientos}
+
+Para complementar el análisis, se emplearon modelos como:
+
+\begin{itemize}
+    \item Diagramas de casos de uso, para representar la interacción entre actores y el sistema.
+    \item Historias de usuario, para describir funcionalidades desde la perspectiva del usuario.
+    \item Flujos de proceso, para visualizar la secuencia de actividades del sistema.
+\end{itemize}
+
+Este análisis permitió transformar las necesidades del usuario en especificaciones técnicas claras, sirviendo como base para el diseño de la arquitectura y la implementación del sistema.
+
+---
+
+\section{Diseño}
+
+En la fase de diseño se definió la arquitectura del sistema considerando atributos de calidad fundamentales para garantizar su correcto funcionamiento y evolución.
+
+\subsection*{Atributos de calidad}
+
+Los principales atributos considerados fueron:
+
+\begin{itemize}
+    \item \textbf{Escalabilidad}: Permitir el crecimiento del sistema sin afectar su rendimiento.
+    \item \textbf{Mantenibilidad}: Facilitar la modificación y actualización del sistema.
+    \item \textbf{Seguridad}: Proteger la información de los usuarios.
+    \item \textbf{Disponibilidad}: Garantizar el acceso continuo al sistema.
+    \item \textbf{Rendimiento}: Optimizar tiempos de respuesta.
+\end{itemize}
+
+\subsection*{Decisiones arquitectónicas (ADR)}
+
+Se tomaron decisiones clave en la arquitectura del sistema:
+
+\begin{itemize}
+    \item Uso de una arquitectura cliente-servidor.
+    \item Implementación de una API REST para la comunicación entre cliente y servidor.
+    \item Uso de base de datos relacional para garantizar integridad de datos.
+    \item Separación de roles mediante entidades especializadas.
+\end{itemize}
+
+Estas decisiones permiten un sistema modular, escalable y fácil de mantener.
+
+\subsection*{Patrones y principios de diseño}
+
+Se aplicaron los siguientes principios:
+
+\begin{itemize}
+    \item Separación de responsabilidades (arquitectura por capas).
+    \item Patrón repositorio para acceso a datos.
+    \item Inyección de dependencias para desacoplamiento.
+    \item Modelo-Vista-ViewModel (MVVM) en la aplicación móvil.
+\end{itemize}
+
+\subsection*{Diagramas utilizados}
+
+Para representar el diseño del sistema se emplearon diversos tipos de diagramas:
+
+\begin{itemize}
+    \item \textbf{Diagramas estructurales}: Diagrama de clases y modelo entidad-relación.
+    \item \textbf{Diagramas de comportamiento}: Diagramas de secuencia para el flujo de servicios.
+    \item \textbf{Diagramas arquitectónicos}: Arquitectura por capas del sistema.
+    \item \textbf{Diagramas de procesos}: Flujo de solicitud de servicio.
+    \item \textbf{Diagramas de infraestructura}: Representación de la interacción entre cliente, API y base de datos.
+    \item \textbf{Diagramas de diseño interactivo}: Wireframes desarrollados en Figma.
+\end{itemize}
+
+En conjunto, el diseño propuesto proporciona una base sólida para el desarrollo del sistema, asegurando coherencia entre los requerimientos, la arquitectura y la implementación.

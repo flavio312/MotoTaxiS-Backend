@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import pool from "../config/db.config";
+import { cloudinaryService } from "../services/cloudinary.service";
 
 export const getUsers = async (req: Request, res: Response): Promise<any> => {
     try{
@@ -30,9 +31,25 @@ export const getUserId = async (req: Request, res: Response) => {
 
 // Crear usuario
 export const createUser = async (req: Request, res: Response): Promise<any> => {
-    const { nombreUsuario, password, rol, estadoCuenta = 'activo', fotoPerfil} = req.body;
+    const { nombreUsuario, password, rol, estadoCuenta = 'activo'} = req.body;
+    let fotoPerfil: string | null = null;
+    let fotoPerfilPublicId: string | null = null;
+
+    if (req.file) {
+        const uploadResult = await cloudinaryService.uploadImage(
+            req.file.buffer,
+            req.file.originalname,
+            {
+                folder: 'usuarios'
+            }
+        );
+
+        fotoPerfil = uploadResult.url;
+        fotoPerfilPublicId = uploadResult.publicId;
+    }
 
     try {
+
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -43,9 +60,9 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
 
          const [result]: any = await pool.query(
             `INSERT INTO Usuarios 
-            (nombreUsuario, password, rol, estadoCuenta, fotoPerfil) 
-            VALUES (?, ?, ?, ?, ?)`,
-            [nombreUsuario, hashedPassword, rol, estadoCuenta, fotoPerfil]
+            (nombreUsuario, password, rol, estadoCuenta, fotoPerfil, fotoPerfilPublicId) 
+            VALUES (?, ?, ?, ?, ?, ?)`,
+            [nombreUsuario, hashedPassword, rol, estadoCuenta, fotoPerfil, fotoPerfilPublicId]
         );
 
         const token = jwt.sign({ idUsuario: result.insertId, nombreUsuario, rol }, secretKey, {
@@ -61,17 +78,41 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
 
 
 export const updateUser = async (req: Request, res: Response): Promise<any> => {
-    const { nombreUsuario, password, rol, estadoCuenta, fotoPerfil } = req.body;
+    const { nombreUsuario, password, rol, estadoCuenta } = req.body;
     const { idUsers } = req.params;
+    let fotoPerfil: string | null = null;
+    let fotoPerfilPublicId: string | null = null;
 
     try {
+        if (req.file) {
+            // Obtener usuario actual
+            const [rows]: any = await pool.query(
+                "SELECT fotoPerfilPublicId FROM Usuarios WHERE idUsuario = ?",
+                [idUsers]
+            );
 
+            const user = rows[0];
+
+            // Eliminar imagen anterior
+            if (user?.fotoPerfilPublicId) {
+                await cloudinaryService.deleteImage(user.fotoPerfilPublicId);
+            }
+
+            // Subir nueva
+            const uploadResult = await cloudinaryService.uploadImage(
+                req.file.buffer,
+                req.file.originalname
+            );
+
+            fotoPerfil = uploadResult.url;
+            fotoPerfilPublicId = uploadResult.publicId;
+        }
         let query = `
             UPDATE Usuarios 
-            SET nombreUsuario = ?, rol = ?, estadoCuenta = ?, fotoPerfil = ?
+            SET nombreUsuario = ?, rol = ?, estadoCuenta = ?, fotoPerfil = ?, fotoPerfilPublicId = ?
         `;
 
-        const params: any[] = [nombreUsuario, rol, estadoCuenta, fotoPerfil];
+        const params: any[] = [nombreUsuario, rol, estadoCuenta, fotoPerfil, fotoPerfilPublicId];
 
         if (password) {
             const saltRounds = 10;

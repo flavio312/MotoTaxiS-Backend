@@ -175,6 +175,7 @@ export const getAutorizacionesPropietarios = async (req: Request, res: Response)
                 a.idUsuario,
                 a.estado,
                 a.fechaSolicitud,
+                pr.rfc,
                 a.fechaResolucion,
                 u.nombreUsuario,
                 p.nombre,
@@ -183,6 +184,7 @@ export const getAutorizacionesPropietarios = async (req: Request, res: Response)
             FROM Autorizacion a
             INNER JOIN Usuarios u ON a.idUsuario = u.idUsuario
             INNER JOIN Persona p ON u.idUsuario = p.idPersona
+            INNER JOIN Propietarios pr ON u.idUsuario = pr.idPropietario
             ORDER BY a.fechaSolicitud DESC`
         );
 

@@ -4,27 +4,29 @@ import pool from "../config/db.config";
 export const createDireccion = async (req: Request, res: Response) => {
 
     const {
-        idAsentamiento,
-        numeroExt,
-        numeroInt,
+        direccionTexto,
         codigoPostal,
         latitud,
-        longitud
+        longitud,
+        ciudad,
+        estado,
+        pais
     } = req.body;
 
     try {
 
         const [result]: any = await pool.query(
             `INSERT INTO Direccion
-            (idAsentamiento, numeroExt, numeroInt, codigoPostal, latitud, longitud)
-            VALUES (?, ?, ?, ?, ?, ?)`,
+            (direccionTexto, codigoPostal, latitud, longitud, ciudad, estado, pais)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [
-                idAsentamiento,
-                numeroExt,
-                numeroInt,
+                direccionTexto,
                 codigoPostal,
                 latitud,
-                longitud
+                longitud,
+                ciudad,
+                estado,
+                pais
             ]
         );
 
@@ -38,10 +40,11 @@ export const createDireccion = async (req: Request, res: Response) => {
         console.error(error);
 
         res.status(500).json({
-            message: "Error al crear la dirección"
+            message: "Error al crear dirección"
         });
 
     }
+
 };
 
 export const getDireccionById = async (req: Request, res: Response) => {
@@ -51,42 +54,28 @@ export const getDireccionById = async (req: Request, res: Response) => {
     try {
 
         const [rows]: any = await pool.query(
-            `SELECT 
-                d.idDireccion,
-                a.nombre AS asentamiento,
-                m.nombre AS municipio,
-                e.nombre AS entidad,
-                z.zona,
-                ta.tipoAsentamiento,
-                d.numeroExt,
-                d.numeroInt,
-                d.codigoPostal,
-                d.latitud,
-                d.longitud
-            FROM Direccion d
-            INNER JOIN Asentamientos a 
-                ON d.idAsentamiento = a.idAsentamiento
-            INNER JOIN Municipio m 
-                ON a.idMunicipio = m.idMunicipio
-            INNER JOIN Entidad e 
-                ON m.idEntidad = e.idEntidad
-            INNER JOIN Zona z 
-                ON a.idZona = z.idZona
-            INNER JOIN TipoAsentamiento ta
-                ON a.idTipoAsentamiento = ta.idTipoAsentamiento
-            WHERE d.idDireccion = ?`,
+            `SELECT * FROM Direccion WHERE idDireccion = ?`,
             [id]
         );
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                message: "Dirección no encontrada"
+            });
+        }
 
         res.json(rows[0]);
 
     } catch (error) {
+
+        console.error(error);
 
         res.status(500).json({
             message: "Error al obtener dirección"
         });
 
     }
+
 };
 
 export const createOrigenDestino = async (req: Request, res: Response) => {
@@ -102,29 +91,38 @@ export const createOrigenDestino = async (req: Request, res: Response) => {
 
         const [origenResult]: any = await connection.query(
             `INSERT INTO Direccion
-            (idAsentamiento, numeroExt, codigoPostal)
-            VALUES (?, ?, ?)`,
+            (direccionTexto, codigoPostal, latitud, longitud, ciudad, estado, pais)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [
-                origen.idAsentamiento,
-                origen.numeroExt,
-                origen.codigoPostal
+                origen.direccionTexto,
+                origen.codigoPostal,
+                origen.latitud,
+                origen.longitud,
+                origen.ciudad,
+                origen.estado,
+                origen.pais
             ]
         );
 
         const [destinoResult]: any = await connection.query(
             `INSERT INTO Direccion
-            (idAsentamiento, numeroExt, codigoPostal)
-            VALUES (?, ?, ?)`,
+            (direccionTexto, codigoPostal, latitud, longitud, ciudad, estado, pais)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [
-                destino.idAsentamiento,
-                destino.numeroExt,
-                destino.codigoPostal
+                destino.direccionTexto,
+                destino.codigoPostal,
+                destino.latitud,
+                destino.longitud,
+                destino.ciudad,
+                destino.estado,
+                destino.pais
             ]
         );
 
         await connection.commit();
 
-        res.json({
+        res.status(201).json({
+            message: "Direcciones guardadas correctamente",
             idOrigen: origenResult.insertId,
             idDestino: destinoResult.insertId
         });
@@ -133,8 +131,10 @@ export const createOrigenDestino = async (req: Request, res: Response) => {
 
         if (connection) await connection.rollback();
 
+        console.error(error);
+
         res.status(500).json({
-            message: "Error al crear direcciones"
+            message: "Error al guardar direcciones"
         });
 
     } finally {
@@ -142,4 +142,46 @@ export const createOrigenDestino = async (req: Request, res: Response) => {
         if (connection) connection.release();
 
     }
+
+};
+
+export const asignarDireccionUsuario = async (req: Request, res: Response) => {
+
+    const {
+        idUsuario,
+        idDireccion,
+        etiqueta,
+        referencia,
+        esFavorita
+    } = req.body;
+
+    try {
+
+        await pool.query(
+            `INSERT INTO UsuarioDireccion
+            (idUsuario, idDireccion, etiqueta, referencia, esFavorita)
+            VALUES (?, ?, ?, ?, ?)`,
+            [
+                idUsuario,
+                idDireccion,
+                etiqueta,
+                referencia,
+                esFavorita
+            ]
+        );
+
+        res.status(201).json({
+            message: "Dirección asociada al usuario"
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Error al asociar dirección"
+        });
+
+    }
+
 };
