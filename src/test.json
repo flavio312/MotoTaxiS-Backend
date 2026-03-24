@@ -1,11 +1,11 @@
-// --usuario--
+--usuario--
 {
   "nombreUsuario": "carlos",
   "password": "Conductor2026",
   "rol": "conductor",
   "estadoCuenta": "activo",
-  "fotoPerfil": "https://miapp.com/uploads/conductor.jpg"
-}
+  "fotoPerfil": file
+},
 // --persona--
 {
   "nombre": "Flavio",

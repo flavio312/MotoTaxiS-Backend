@@ -10,7 +10,7 @@ const router = Router();
 router.get('/', getUsers);
 router.get('/:idUsuario', getUserId);
 router.post('/registro', upload.single('fotoPerfil'), createUser);
-router.put('/:idUsuario', upload.any(), updateUser);
+router.put('/:idUsuario', upload.single('fotoPerfil'), updateUser);
 router.delete('/:idUsers', deleteUser);
 
 export default router;
