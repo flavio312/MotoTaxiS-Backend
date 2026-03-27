@@ -18,9 +18,6 @@ export class CloudinaryService {
     console.log('✓ Cloudinary configurado correctamente');
   }
 
-  /**
-   * Subir imagen desde buffer
-   */
   async uploadImage(
     fileBuffer: Buffer, 
     fileName: string, 
@@ -73,9 +70,6 @@ export class CloudinaryService {
     }
   }
 
-  /**
-   * Eliminar imagen de Cloudinary
-   */
   async deleteImage(publicId: string): Promise<CloudinaryDeleteResult> {
     try {
       console.log(`🗑️ Eliminando imagen: ${publicId}`);
@@ -96,9 +90,6 @@ export class CloudinaryService {
     }
   }
 
-  /**
-   * Generar URL con transformaciones
-   */
   generateUrl(publicId: string, transformations: any[] = []): string {
     try {
       return cloudinary.url(publicId, {
@@ -111,9 +102,6 @@ export class CloudinaryService {
     }
   }
 
-  /**
-   * Obtener detalles de una imagen
-   */
   async getImageDetails(publicId: string): Promise<any> {
     try {
       const result = await cloudinary.api.resource(publicId);
@@ -133,7 +121,6 @@ export class CloudinaryService {
   }
 }
 
-// Configuración de Multer para manejar archivos
 const storage = multer.memoryStorage();
 
 export const upload = multer({
@@ -150,7 +137,6 @@ export const upload = multer({
   }
 });
 
-// Instancia singleton del servicio
 export const cloudinaryService = new CloudinaryService();
 
 export { cloudinary };

@@ -1,6 +1,5 @@
 import multer from 'multer';
 
-// Configuración de almacenamiento en memoria
 const storage = multer.memoryStorage();
 
 const validMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
