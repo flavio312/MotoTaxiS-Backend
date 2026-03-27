@@ -1,7 +1,7 @@
 #  Moto Taxi Seguro BackEnd – API REST
 Esta API REST es de uso Privado para la aplicación de MotoTaxi Seguro el cual es para la gestión y monitoreo de servicios (Viajes, envio de paquetes).
 
-La API REST esta desarrollada con **Node.js, Express y MySQL** para la gestión de usuarios, propietarios, conductores y vehículos.
+La API REST esta desarrollada con **Node.js, Express y MySQL con Socket.io** para la gestión de usuarios, propietarios, conductores y vehículos con monitoreo de servicios en tiempo real.
 Incluye autenticación mediante **JSON Web Token (JWT)** y control de roles para permitir diferentes niveles de acceso.
 
 ## 📌 Características
@@ -22,6 +22,7 @@ Incluye autenticación mediante **JSON Web Token (JWT)** y control de roles para
 * **Node.js**
 * **Express**
 * **TypeScript**
+* **Socket.io**
 * **MySQL**
 * **JWT (Json Web Token)**
 * **Postman** para pruebas de endpoints
@@ -44,6 +45,7 @@ src
 │   └── vehiculo.controller.ts
 │
 ├── middlewares
+|   ├── upload.ts
 │   └── auth.middleware.ts
 │
 ├── models
@@ -59,7 +61,14 @@ src
 │   ├── conductor.routes.ts
 │   └── vehiculo.routes.ts
 │
-└── app.ts
+├── services
+|   ├── cloudinary.service.ts
+│   └── socket.service.ts
+|
+├── types
+│   └── index.ts
+├── app.ts
+└── index.ts
 ```
 
 ---
