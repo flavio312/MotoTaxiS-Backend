@@ -28,7 +28,7 @@ export const createConductor = async (req: AuthRequest, res: Response): Promise<
     try {
 
         await connection.beginTransaction();
-
+        //insertar Conductor
         await connection.query(
             `INSERT INTO Conductores
             (idConductor, licencia, licenciaFechaExpedicion, licenciaFechaVencimiento)
@@ -40,7 +40,7 @@ export const createConductor = async (req: AuthRequest, res: Response): Promise<
                 licenciaFechaVencimiento
             ]
         );
-
+        //insertar cambio de estatus
         await connection.query(
             `INSERT INTO ConductorCambioEstatus
             (idConductor, estatus, descripcion, fecha)
@@ -53,18 +53,42 @@ export const createConductor = async (req: AuthRequest, res: Response): Promise<
         );
 
         if (jornada) {
+            let idConductorHorario: number | null = null;
+
+            if (jornada.horario) {
+                const [horarioResult] = await connection.query(
+                    `INSERT INTO ConductorHorario (dias, horas) VALUES (?, ?)`,
+                    [jornada.horario.dias, jornada.horario.horas]
+                );
+
+                // Recuperar el ID autogenerado
+                idConductorHorario = (horarioResult as any).insertId;
+            }
 
             await connection.query(
                 `INSERT INTO ConductorJornada
-                (idConductor, fecha, horaInicio, horaFin)
-                VALUES (?, ?, ?, ?)`,
+                (idConductor, idConductorHorario, fechaRegistro, fechaInicio, fechaFin)
+                VALUES (?, ?, ?, ?, ?)`,
                 [
                     idUsuario,
-                    jornada.fecha,
-                    jornada.horaInicio,
-                    jornada.horaFin
+                    idConductorHorario,
+                    jornada.fechaRegistro,
+                    jornada.fechaInicio,
+                    jornada.fechaFin
                 ]
             );
+
+            if(jornada.horario){
+                await connection.query(
+                    `INSERT INTO ConductorHorario
+                    (dias, horas)
+                    VALUES (?, ?)`,
+                    [
+                        jornada.horario.dias,
+                        jornada.horario.horas
+                    ]
+                );
+            }
         }
 
         await connection.commit();

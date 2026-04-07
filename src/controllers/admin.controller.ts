@@ -172,7 +172,7 @@ export const getAutorizacionesPropietarios = async (req: Request, res: Response)
         const [rows] = await pool.query(
             `SELECT 
                 a.idAutorizacion,
-                a.idUsuario,
+                a.idUsuarioSolicitante,
                 a.estado,
                 a.fechaSolicitud,
                 pr.rfc,
@@ -182,7 +182,7 @@ export const getAutorizacionesPropietarios = async (req: Request, res: Response)
                 p.apellidoP,
                 p.apellidoM
             FROM Autorizacion a
-            INNER JOIN Usuarios u ON a.idUsuario = u.idUsuario
+            INNER JOIN Usuarios u ON a.idUsuarioSolicitante = u.idUsuario
             INNER JOIN Persona p ON u.idUsuario = p.idPersona
             INNER JOIN Propietarios pr ON u.idUsuario = pr.idPropietario
             ORDER BY a.fechaSolicitud DESC`
