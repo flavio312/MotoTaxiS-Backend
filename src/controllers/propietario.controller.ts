@@ -6,8 +6,6 @@ export const createPropietario = async (req: AuthRequest, res: Response): Promis
     const idPropietario = req.user?.idUsuario;
     const { rfc, razonSocial } = req.body;
 
-    console.log("Datos recibidos para crear propietario:", { idPropietario:req.user?.idUsuario, rfc, razonSocial });
-
     let connection;
 
     const validarRfc = (rfc: string): boolean => {
