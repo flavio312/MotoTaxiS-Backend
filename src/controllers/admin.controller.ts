@@ -44,10 +44,13 @@ export const getAllConductores = async (req: Request, res: Response) => {
                 p.apellidoP,
                 c.licencia,
                 c.licenciaFechaExpedicion,
-                c.licenciaFechaVencimiento
+                c.licenciaFechaVencimiento,
+                e.estatus
             FROM Conductores c
             INNER JOIN Persona p 
-            ON c.idConductor = p.idPersona`
+            ON c.idConductor = p.idPersona
+            INNER JOIN ConductorCambioEstatus e
+            ON c.idConductor = e.idConductor`
         );
 
         res.json(rows);
