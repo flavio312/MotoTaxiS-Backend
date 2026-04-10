@@ -1,6 +1,7 @@
 import express from "express";
 import {
-    createDireccion,
+    crearDireccion,
+    createDireccionGoogle,
     getDireccionById,
     createOrigenDestino,
     asignarDireccionUsuario
@@ -9,7 +10,8 @@ import {
 const router = express.Router();
 
 // Crear una dirección
-router.post("/direccion", createDireccion);
+router.post("/direccion", crearDireccion);
+router.post("/direccionG", createDireccionGoogle);
 
 // Obtener dirección por ID
 router.get("/direccion/:id", getDireccionById);
