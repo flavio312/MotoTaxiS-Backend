@@ -7,7 +7,8 @@ import {
     getVehiculoEstatus,
     getAutorizacionesPropietarios,
     aprobarPropietario,
-    rechazarPropietario
+    rechazarPropietario,
+    deleteUser
 } from "../controllers/admin.controller";
 
 import { authenticateToken, authorizeRole } from "../middlewares/auth.middleware";
@@ -67,4 +68,10 @@ router.put(
     authorizeRole(['admin']),
     rechazarPropietario
 );
+router.delete(
+    "/usuarios/:idUsuario",
+    authenticateToken,
+    authorizeRole(['admin']),
+    deleteUser
+)
 export default router;

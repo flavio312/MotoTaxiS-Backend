@@ -297,3 +297,23 @@ export const rechazarPropietario = async (req: Request, res: Response) => {
         if (connection) connection.release();
     }
 };
+
+export const deleteUser = async (req: Request, res: Response): Promise<any> => {
+    const { idUsuario } = req.params;
+
+    try {
+        await pool.query('DELETE FROM persona WHERE idPersona = ?', [idUsuario]);
+
+        const [result]: any = await pool.query('DELETE FROM Usuarios WHERE idUsuario = ?', [idUsuario]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        console.log("Usuario eliminado correctamente:", { idUsuario: idUsuario });
+        res.json({ message: 'Usuario eliminado exitosamente' });
+    } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+        res.status(500).json({ message: "Error al eliminar el usuario" });
+    }
+};

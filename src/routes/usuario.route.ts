@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getUsers, 
     getUserId, createUser, 
-    updateUser, deleteUser 
+    updateUser
 } from '../controllers/usuario.controller';
 import upload from '../middlewares/upload';
 
@@ -11,6 +11,5 @@ router.get('/', getUsers);
 router.get('/:idUsuario', getUserId);
 router.post('/registro', upload.single('fotoPerfil'), createUser);
 router.put('/:idUsuario', upload.single('fotoPerfil'), updateUser);
-router.delete('/:idUsers', deleteUser);
 
 export default router;

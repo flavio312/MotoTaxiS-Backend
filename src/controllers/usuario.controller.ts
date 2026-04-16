@@ -138,22 +138,4 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
     }
 };
 
-export const deleteUser = async (req: Request, res: Response): Promise<any> => {
-    const { idUsers } = req.params;
 
-    try {
-        await pool.query('DELETE FROM persona WHERE idPersona = ?', [idUsers]);
-
-        const [result]: any = await pool.query('DELETE FROM Usuarios WHERE idUsuario = ?', [idUsers]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        console.log("Usuario eliminado correctamente:", { idUsuario: idUsers });
-        res.json({ message: 'User deleted successfully' });
-    } catch (error) {
-        console.error("Error al eliminar el usuario:", error);
-        res.status(500).json({ message: "Error al eliminar el usuario" });
-    }
-};
