@@ -4,17 +4,6 @@ import jwt from "jsonwebtoken";
 import pool from "../config/db.config";
 import { cloudinaryService } from "../services/cloudinary.service";
 
-export const getUsers = async (req: Request, res: Response): Promise<any> => {
-    try{
-        const [rows] = await pool.query('SELECT * FROM Usuarios');
-        res.json(rows);
-        console.log("Usuarios obtenidos correctamente");
-    } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
-        res.status(500).json({ message: "Error al obtener los usuarios" });
-    }
-};
-
 // Obtener usuario por ID
 export const getUserId = async (req: Request, res: Response) => {
     try{
@@ -138,4 +127,22 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
     }
 };
 
+export const deleteUserById = async (req: Request, res: Response): Promise<any> => {
+    const { idUsuario } = req.params;
 
+    try {
+        await pool.query('DELETE FROM persona WHERE idPersona = ?', [idUsuario]);
+
+        const [result]: any = await pool.query('DELETE FROM Usuarios WHERE idUsuario = ?', [idUsuario]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        console.log("Usuario eliminado correctamente:", { idUsuario: idUsuario });
+        res.json({ message: 'Usuario eliminado exitosamente' });
+    } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+        res.status(500).json({ message: "Error al eliminar el usuario" });
+    }
+};

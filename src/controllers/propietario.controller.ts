@@ -52,7 +52,7 @@ export const createPropietario = async (req: AuthRequest, res: Response): Promis
         }
          // Verificar si ya existe autorización
         const [autorizacion]: any = await connection.query(
-            `SELECT idAutorizacion, estado FROM Autorizacion WHERE idUsuario = ? ORDER BY fechaSolicitud DESC LIMIT 1`,
+            `SELECT idAutorizacion, estado FROM Autorizacion WHERE idUsuarioSolicitante = ? ORDER BY fechaSolicitud DESC LIMIT 1`,
             [idPropietario]
         );
         if (autorizacion.length > 0 && autorizacion[0].estado === 'pendiente') {
@@ -75,7 +75,7 @@ export const createPropietario = async (req: AuthRequest, res: Response): Promis
         );
         // Crear solicitud de autorización
         await connection.query(
-            `INSERT INTO Autorizacion (idUsuario, estado, fechaSolicitud)
+            `INSERT INTO Autorizacion (idUsuarioSolicitante, estado, fechaSolicitud)
              VALUES (?, 'pendiente', NOW())`,
             [idPropietario]
         );
