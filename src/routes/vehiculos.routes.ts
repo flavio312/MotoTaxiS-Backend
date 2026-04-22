@@ -9,14 +9,14 @@ from "../controllers/vehiculo.controller";
 const router = express.Router();
 
 router.post(
-    "/vehiculos",
+    "/vehiculos/propietario",
     authenticateToken,
     authorizeRole(['propietario']),
     crearVehiculo
 );
 
 router.get(
-    "/vehiculos",
+    "/vehiculos/propietario",
     authenticateToken,
     authorizeRole(['propietario']),
     getMyVehiculos

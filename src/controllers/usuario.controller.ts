@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { AuthRequest } from "../middlewares/auth.middleware";
 import pool from "../config/db.config";
 import { cloudinaryService } from "../services/cloudinary.service";
 
@@ -144,5 +145,31 @@ export const deleteUserById = async (req: Request, res: Response): Promise<any> 
     } catch (error) {
         console.error("Error al eliminar el usuario:", error);
         res.status(500).json({ message: "Error al eliminar el usuario" });
+    }
+};
+
+
+export const deleteMe = async (req: AuthRequest, res: Response): Promise<any> => {
+    try {
+        const idUsuario = req.user?.idUsuario;
+        if (!idUsuario) {
+            return res.status(401).json({ message: "No autenticado" });
+        }
+
+        // Si tienes tabla persona relacionada
+        await pool.query("DELETE FROM persona WHERE idPersona = ?", [idUsuario]);
+
+        // Eliminar usuario
+        const [result]: any = await pool.query("DELETE FROM Usuarios WHERE idUsuario = ?", [idUsuario]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        console.log("Usuario eliminado correctamente:", { idUsuario });
+        return res.json({ message: "Tu cuenta ha sido eliminada exitosamente" });
+    } catch (error) {
+        console.error("Error al eliminar la cuenta:", error);
+        return res.status(500).json({ message: "Error al eliminar la cuenta" });
     }
 };

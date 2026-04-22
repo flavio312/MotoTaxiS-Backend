@@ -22,7 +22,6 @@ export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<an
         connection = await pool.getConnection();
         await connection.beginTransaction();
 
-        // 1️⃣ Crear vehículo
         const [result]: any = await connection.query(
             `INSERT INTO Vehiculo
             (inmatriculacion, idModelo,color, fechaAdquisicion)
@@ -82,7 +81,7 @@ export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<an
     }
 };
 
-export const getMyVehiculos = async (req: AuthRequest, res: Response) => {
+export const getMyVehiculos = async (req: AuthRequest, res: Response): Promise<any> => {
 
     const idPropietario = req.user?.idUsuario;
 
@@ -116,7 +115,7 @@ export const getMyVehiculos = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const updateVehiculo = async (req: AuthRequest, res: Response) => {
+export const updateVehiculo = async (req: AuthRequest, res: Response) : Promise<any> => {
 
     const { idVehiculo } = req.params;
     const { inmatriculacion, idModelo, fechaAdquisicion } = req.body;
@@ -148,7 +147,7 @@ export const updateVehiculo = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const changeVehiculoStatus = async (req: AuthRequest, res: Response) => {
+export const changeVehiculoStatus = async (req: AuthRequest, res: Response): Promise<any>  => {
 
     const { idVehiculo } = req.params;
     const { estatus, descripcion } = req.body;
