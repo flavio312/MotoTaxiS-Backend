@@ -1,6 +1,7 @@
 import {Response, Request} from 'express';
 import pool from '../config/db.config';
 import {AuthRequest} from '../middlewares/auth.middleware';
+import nodemailer from 'nodemailer';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
@@ -209,7 +210,7 @@ export const aprobarPropietario = async (req: Request, res: Response) => {
 
         // Verificar autorización
         const [rows]: any = await connection.query(
-            `SELECT idUsuario, estado FROM Autorizacion WHERE idAutorizacion = ?`,
+            `SELECT idUsuarioSolicitante, estado FROM Autorizacion WHERE idAutorizacion = ?`,
             [idAutorizacion]
         );
 
@@ -221,7 +222,7 @@ export const aprobarPropietario = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "La solicitud ya fue procesada" });
         }
 
-        const idUsuario = rows[0].idUsuario;
+        const idUsuarioSolicitante = rows[0].idUsuarioSolicitante;
 
         // Actualizar autorización
         await connection.query(
@@ -234,9 +235,32 @@ export const aprobarPropietario = async (req: Request, res: Response) => {
         // Aquí decides si quieres marcar algo en Usuarios (ej. estadoCuenta activo)
         await connection.query(
             `UPDATE Usuarios SET estadoCuenta = 'activo' WHERE idUsuario = ?`,
-            [idUsuario]
+            [idUsuarioSolicitante]
         );
 
+        // Obtener correo electrónico del usuario
+        const [userRows]: any = await connection.query(
+            `SELECT correoElectronico FROM Persona WHERE idPersona = ?`,
+            [idUsuarioSolicitante]
+        );
+        const email = userRows[0].correoElectronico;
+
+        // Enviar notificación por correo
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Solicitud de Propietario Aprobada',
+            text: 'Su solicitud para convertirse en propietario ha sido aprobada.'
+        });
+
+        
         await connection.commit();
         res.json({ message: "Propietario aprobado exitosamente" });
 
