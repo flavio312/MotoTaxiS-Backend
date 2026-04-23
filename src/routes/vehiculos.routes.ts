@@ -1,9 +1,7 @@
 import express from "express";
 import { authenticateToken, authorizeRole } from "../middlewares/auth.middleware";
-import { crearVehiculo,
-    getMyVehiculos, 
-    updateVehiculo, 
-    changeVehiculoStatus } 
+import { crearVehiculo, getMyVehiculos, 
+    updateVehiculo, changeVehiculoStatus, getVehiculoById } 
 from "../controllers/vehiculo.controller";
 
 const router = express.Router();
@@ -20,6 +18,13 @@ router.get(
     authenticateToken,
     authorizeRole(['propietario']),
     getMyVehiculos
+);
+
+router.get(
+    "/vehiculos/propietario/:idVehiculo",
+    authenticateToken,
+    authorizeRole(['propietario']),
+    getVehiculoById
 );
 
 router.put(

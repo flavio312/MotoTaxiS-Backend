@@ -81,10 +81,36 @@ export const crearVehiculo = async (req: AuthRequest, res: Response): Promise<an
     }
 };
 
+export const getVehiculoById = async (req: AuthRequest, res: Response): Promise<any> => {
+
+    const { idVehiculo } = req.params;
+
+    try {
+
+        const [row] = await pool.query(
+            `SELECT * FROM Vehiculos WHERE idVehiculo = ?`,
+            [idVehiculo]
+        );
+
+        if (!row) {
+            return res.status(404).json({
+                message: "Vehículo no encontrado"
+            });
+        }
+
+        res.json(row);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: "Error al obtener vehículo"
+        });
+
+    }
+};
+
 export const getMyVehiculos = async (req: AuthRequest, res: Response): Promise<any> => {
-
     const idPropietario = req.user?.idUsuario;
-
     try {
 
         const [rows] = await pool.query(
@@ -92,26 +118,27 @@ export const getMyVehiculos = async (req: AuthRequest, res: Response): Promise<a
                 v.idVehiculo,
                 v.inmatriculacion,
                 v.idModelo,
+                v.color,
                 vm.descripcion AS modelo,
-                v.fechaAdquisicion
-            FROM Vehiculos v
+                v.fechaAdquisicion,
+                ve.estatus,
+                ve.descripcion
+            FROM Vehiculo v
             INNER JOIN PropietarioVehiculo pv 
                 ON v.idVehiculo = pv.idVehiculo
             LEFT JOIN VehiculoModelo vm
                 ON v.idModelo = vm.idModelo
+            LEFT JOIN VehiculoEstatus ve
+                ON v.idVehiculo = ve.idVehiculo AND ve.fechaFin IS NULL
             WHERE pv.idPropietario = ?
             AND pv.fechaFin IS NULL`,
             [idPropietario]
         );
-
         res.json(rows);
-
     } catch (error) {
-
         res.status(500).json({
             message: "Error al obtener vehículos"
         });
-
     }
 };
 

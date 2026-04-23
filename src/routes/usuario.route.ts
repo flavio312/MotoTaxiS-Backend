@@ -11,4 +11,5 @@ router.put('/:idUsuario', upload.single('fotoPerfil'), updateUser);
 router.delete('/:idUsuario',deleteUserById);
 router.delete('/delete/me', deleteMe);
 
+
 export default router;
