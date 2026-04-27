@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { getIO } from "../services/socket.service";
-import { Servicios } from "../models/servicio.models";
-import { AuthRequest } from "../middlewares/auth.middleware";
 import pool from "../config/db.config";
 
 // Crear servicio
@@ -35,6 +33,39 @@ export const crearServicio = async (req: Request, res: Response) => {
                 estado || 'solicitado'
             ]
         );
+         const idServicio = result.insertId;
+
+        // Obtener coords para mandarlas a los conductores
+        const [direcciones]: any = await pool.query(`
+            SELECT 
+                do.latitud  AS latOrigen,  do.longitud AS lngOrigen,
+                dd.latitud  AS latDestino, dd.longitud AS lngDestino,
+                do.calle    AS origen,     dd.calle    AS destino,
+                ts.nombre   AS tipoServicio
+            FROM Servicios s
+            JOIN Direccion do   ON s.idDireccionOrigen  = do.idDireccion
+            JOIN Direccion dd   ON s.idDireccionDestino = dd.idDireccion
+            JOIN TipoServicio ts ON s.idTipoServicio    = ts.idTipoServicio
+            WHERE s.idServicio = ?
+        `, [idServicio]);
+
+        // Emitir a todos los conductores conectados
+        const io = getIO();
+        io.emit('nuevaSolicitud', {
+            idServicio,
+            idConductor:  0,
+            conductor:    '',
+            tipoPaquete:  direcciones[0].tipoServicio,
+            origen:       direcciones[0].origen,
+            destino:      direcciones[0].destino,
+            latOrigen:    direcciones[0].latOrigen,
+            lngOrigen:    direcciones[0].lngOrigen,
+            latDestino:   direcciones[0].latDestino,
+            lngDestino:   direcciones[0].lngDestino,
+            estado:       'solicitado',
+        });
+
+        res.status(201).json({ message: "Servicio creado", idServicio });
 
         res.status(201).json({
             message: "Servicio creado",
@@ -312,11 +343,22 @@ export const actualizarUbicacionSocket = async (idConductor: number, latitud: nu
 };
 
 export const aceptarServicioSocket = async (
-    idServicio: number, 
-    idConductor: number, 
+    idServicio: number,
+    idConductor: number,
     socket: any) => {
+
     const [servicio]: any = await pool.query(
-        "SELECT estado FROM Servicios WHERE idServicio = ?",
+        `SELECT s.estado,
+                do.latitud  AS latOrigen,  do.longitud AS lngOrigen,
+                dd.latitud  AS latDestino, dd.longitud AS lngDestino,
+                p.nombre    AS nombrePasajero,
+                ts.nombre   AS tipoServicio
+         FROM Servicios s
+         JOIN Direccion do  ON s.idDireccionOrigen  = do.idDireccion
+         JOIN Direccion dd  ON s.idDireccionDestino = dd.idDireccion
+         JOIN Pasajeros p   ON s.idPasajero         = p.idPasajero
+         JOIN TipoServicio ts ON s.idTipoServicio   = ts.idTipoServicio
+         WHERE s.idServicio = ?`,
         [idServicio]
     );
 
@@ -342,9 +384,23 @@ export const aceptarServicioSocket = async (
 
     const io = getIO();
 
-    // Notificar a TODOS que ya se tomó
-    io.emit("servicioTomado", idServicio);
+    // ── Payload completo con coordenadas ──────────────────────────────────
+    const payload = {
+        idServicio,
+        idConductor,
+        latOrigen:      servicio[0].latOrigen,
+        lngOrigen:      servicio[0].lngOrigen,
+        latDestino:     servicio[0].latDestino,
+        lngDestino:     servicio[0].lngDestino,
+        nombrePasajero: servicio[0].nombrePasajero,
+        tipoServicio:   servicio[0].tipoServicio,
+    };
 
-    socket.emit("servicioAceptado", idServicio);
+    // Notificar al pasajero que su servicio fue tomado (con coords)
+    io.to(`servicio_${idServicio}`).emit("servicioTomado", payload);
+
+    // Confirmar al conductor con las mismas coords para navegar al mapa
+    socket.emit("servicioAceptado", payload);
+
     return { ok: true, message: "Servicio aceptado" };
 };

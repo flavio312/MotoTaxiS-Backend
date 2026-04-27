@@ -14,13 +14,11 @@ export const initSocket = (server: any) => {
     io.on("connection", (socket) => {
         console.log("Conductor conectado:", socket.id);
 
-        // Registrar conductor
         socket.on("registrarConductor", (idConductor) => {
             socket.join(`conductor_${idConductor}`);
             console.log(`Conductor ${idConductor} registrado`);
         });
 
-        // Actualizar ubicación en tiempo real
         socket.on("ubicacion", async (data) => {
             const { idConductor, latitud, longitud } = data;
 
@@ -32,7 +30,6 @@ export const initSocket = (server: any) => {
             }
         });
 
-        // Aceptar servicio
         socket.on("aceptarServicio", async (data) => {
             const { idServicio, idConductor  } = data;
 
@@ -51,13 +48,11 @@ export const initSocket = (server: any) => {
         socket.on("tracking", async (data) => {
             const { idServicio, latitud, longitud, velocidad } = data;
 
-            // 1. Guardar en BD
             await pool.query(`
                 INSERT INTO RastreoTiempoReal (idServicio, latitud, longitud, velocidad)
                 VALUES (?, ?, ?, ?)
             `, [idServicio, latitud, longitud, velocidad]);
 
-            // 2. Emitir a pasajeros (room del servicio)
             io.to(`servicio_${idServicio}`).emit("ubicacionConductor", {
                 latitud,
                 longitud,
