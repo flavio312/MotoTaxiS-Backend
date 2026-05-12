@@ -1,5 +1,5 @@
 import express from 'express';
-import { createConductor, getConductor, updateConductor } from '../controllers/conductores.controller';
+import { createConductor, getConductor, qrCodeConductor, updateConductor } from '../controllers/conductores.controller';
 import { authenticateToken, authorizeRole } from '../middlewares/auth.middleware';
 
 const router = express.Router();
@@ -22,6 +22,12 @@ router.put(
     authenticateToken,
     authorizeRole(['conductor']),
     updateConductor
+);
+router.get(
+    "/conductor/qr",
+    authenticateToken,
+    authorizeRole(['conductor']),
+    qrCodeConductor
 );
 
 export default router;

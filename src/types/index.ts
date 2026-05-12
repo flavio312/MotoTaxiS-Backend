@@ -1,6 +1,4 @@
 import { Request } from 'express';
-
-// Tipos para Cloudinary
 export interface CloudinaryUploadResult {
   publicId: string;
   url: string;
@@ -22,8 +20,6 @@ export interface CloudinaryDeleteResult {
   success: boolean;
   result: string;
 }
-
-// Tipos para el Usuario
 export interface Usuario {
   idUsuario?: number;
   nombreUsuario: string;

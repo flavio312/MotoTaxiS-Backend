@@ -1,6 +1,8 @@
-import { Response, Request } from "express";
+import { Response} from "express";
+import QRCode from "qrcode";
 import pool from "../config/db.config";
 import { AuthRequest } from "../middlewares/auth.middleware";
+import { error } from "node:console";
 
 export const createConductor = async (req: AuthRequest, res: Response): Promise<any> => {
    
@@ -113,7 +115,7 @@ export const createConductor = async (req: AuthRequest, res: Response): Promise<
     }
 };
 
-export const getConductor = async (req: AuthRequest, res: Response) => {
+export const getConductor = async (req: AuthRequest, res: Response): Promise<any> => {
 
     const idUsuario = req.user?.idUsuario;
 
@@ -127,7 +129,7 @@ export const getConductor = async (req: AuthRequest, res: Response) => {
     res.json(rows[0]);
 };
 
-export const updateConductor = async (req: AuthRequest, res: Response) => {
+export const updateConductor = async (req: AuthRequest, res: Response): Promise<any> => {
 
     const idUsuario = req.user?.idUsuario;
     const rol = req.user?.rol;
@@ -151,4 +153,34 @@ export const updateConductor = async (req: AuthRequest, res: Response) => {
     );
 
     res.json({ message: "Conductor actualizado" });
+};
+
+export const qrCodeConductor = async (req: AuthRequest, res: Response): Promise<any> => {
+    const idUsuario = req.user?.idUsuario;
+    try{
+        const [rows]: any = await pool.query(
+            `SELECT p.nombre, p.apellidoP, p.apellidoM, p.telefono,
+                c.licencia, u.fotoPerfil
+            FROM Usuarios u
+            INNER JOIN Persona p ON p.idPersona = u.idUsuario
+            INNER JOIN Conductores c ON c.idConductor = u.idUsuario
+            WHERE u.idUsuario = ?`,
+            [idUsuario]
+        );
+
+        const conductor = rows[0];
+
+        const data = {
+            nombre: `${conductor.nombre} ${conductor.apellidoP} ${conductor.apellidoM}`,
+            licencia: conductor.licencia,
+            telefono: conductor.telefono,
+            fotoPerfil: conductor.fotoPerfil
+        };
+        const qrCode = await QRCode.toDataURL(JSON.stringify(data));
+        res.json({ qrCode});
+        console.log(error);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error al generar QR code", error });
+    }
 };
