@@ -23,9 +23,7 @@ export class CloudinaryService {
     fileName: string, 
     options: CloudinaryUploadOptions = {}
   ): Promise<CloudinaryUploadResult> {
-    try {
-      console.log(`📤 Subiendo imagen a Cloudinary: ${fileName}`);
-      
+    try {     
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload_stream(
           {

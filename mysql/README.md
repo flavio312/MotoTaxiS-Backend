@@ -1,0 +1,1 @@
+las tablas de la base de datos con nomenclatura de #init.sql con todas las tablas y el codigo de creacion de base de datos, docker crea el contenedor para que se conecte en automatico con el back con la base de datos.

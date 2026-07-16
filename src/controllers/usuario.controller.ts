@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AuthRequest } from "../middlewares/auth.middleware";
 import pool from "../config/db.config";

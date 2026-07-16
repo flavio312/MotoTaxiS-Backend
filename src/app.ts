@@ -1,16 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import pool from "./src/config/db.config";
-import usuarioRoutes from "./src/routes/usuario.route";
-import loginRoutes from "./src/routes/login.routes";
-import personaRoutes from "./src/routes/persona.routes";
-import conductorRoutes from "./src/routes/conductores.routes";
-import vehiculoRoutes from "./src/routes/vehiculos.routes";
-import adminRoutes from "./src/routes/admin.routes";
-import propietarioRoutes from "./src/routes/propietario.routes";
-import domicilioRoutes from "./src/routes/domicilio.routes";
-import servicioRoutes from "./src/routes/servicio.routes";
+import pool from "./config/db.config";
+import usuarioRoutes from "./routes/usuario.route";
+import loginRoutes from "./routes/login.routes";
+import personaRoutes from "./routes/persona.routes";
+import conductorRoutes from "./routes/conductores.routes";
+import vehiculoRoutes from "./routes/vehiculos.routes";
+import adminRoutes from "./routes/admin.routes";
+import propietarioRoutes from "./routes/propietario.routes";
+import domicilioRoutes from "./routes/domicilio.routes";
+import servicioRoutes from "./routes/servicio.routes";
 
 dotenv.config();
 

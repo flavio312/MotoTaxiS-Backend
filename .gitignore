@@ -5,3 +5,11 @@ node_modules
 tsconfig.json
 
 .py
+
+docker-compose.yml
+
+docker-compose.dev.yml
+
+.npmrc
+
+init.sql

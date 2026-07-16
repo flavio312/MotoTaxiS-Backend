@@ -1,5 +1,5 @@
 #  Moto Taxi Seguro BackEnd – API REST
-Esta API REST es de uso Privado para la aplicación de MotoTaxi Seguro el cual es para la gestión y monitoreo de servicios (Viajes, envio de paquetes).
+Esta API REST es de uso Privado para la aplicación de MotoTaxi Seguro el cual es para la gestión y monitoreo de servicios (Viajes, envio de paquetes, gestión de usuarios).
 
 La API REST esta desarrollada con **Node.js, Express y MySQL con Socket.io** para la gestión de usuarios, propietarios, conductores y vehículos con monitoreo de servicios en tiempo real.
 Incluye autenticación mediante **JSON Web Token (JWT)** y control de roles para permitir diferentes niveles de acceso.
