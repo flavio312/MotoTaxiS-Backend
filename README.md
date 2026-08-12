@@ -1,5 +1,5 @@
 #  Moto Taxi Seguro BackEnd – API REST
-Esta API REST es de uso Privado para la aplicación de MotoTaxi Seguro el cual es para la gestión y monitoreo de servicios (Viajes, envio de paquetes, gestión de usuarios).
+Esta API REST es de uso Privado para la aplicación de MotoTaxi Seguro el cual es para la gestión y monitoreo de servicios (Viajes, envio de paquetes, gestión de usuarios en tiempo real).
 
 La API REST esta desarrollada con **Node.js, Express y MySQL con Socket.io** para la gestión de usuarios, propietarios, conductores y vehículos con monitoreo de servicios en tiempo real.
 Incluye autenticación mediante **JSON Web Token (JWT)** y control de roles para permitir diferentes niveles de acceso.
@@ -39,9 +39,14 @@ src
 │
 ├── controllers
 │   ├── auth.controller.ts
+│   ├── admin.controller.ts
+│   ├── direcciones.controller.ts
+│   ├── login.controller.ts
 │   ├── usuario.controller.ts
 │   ├── propietario.controller.ts
-│   ├── conductor.controller.ts
+│   ├── persona.controller.ts
+│   ├── conductores.controller.ts
+│   ├── servicio.controller.ts
 │   └── vehiculo.controller.ts
 │
 ├── middlewares
@@ -51,14 +56,21 @@ src
 ├── models
 │   ├── usuario.model.ts
 │   ├── propietario.model.ts
-│   ├── conductor.model.ts
+│   ├── domicilio.model.ts
+│   ├── persona.model.ts
+│   ├── servicio.model.ts
+│   ├── conductores.model.ts
 │   └── vehiculo.model.ts
 │
 ├── routes
 │   ├── auth.routes.ts
+│   ├── admin.routes.ts
+│   ├── conductores.routes.ts
 │   ├── usuario.routes.ts
+│   ├── login.routes.ts
 │   ├── propietario.routes.ts
-│   ├── conductor.routes.ts
+│   ├── servicio.routes.ts
+│   ├── persona.routes.ts
 │   └── vehiculo.routes.ts
 │
 ├── services
@@ -78,25 +90,25 @@ src
 Clonar el repositorio
 
 ```bash
-git clone https://github.com/tuusuario/nombre-del-repositorio.git
+git clone https://github.com/flavio312/MotoTaxiS-Backend.git
 ```
 
 Entrar al proyecto
 
 ```bash
-cd nombre-del-repositorio
+cd MotoTaxiS-Backend
 ```
 
 Instalar dependencias
 
 ```bash
-npm install
+pnpm install
 ```
 
 Ejecutar el servidor
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ---
@@ -133,6 +145,11 @@ El sistema contempla diferentes tipos de usuario:
 * **Conductor**
 
   * Acceso limitado a vehículos asignados
+  * Acceso limitado a servicio de transporte
+
+* **Usuario**
+
+  * Acceso limitado a solicitar transporte
 
 ---
 
